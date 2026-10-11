@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VerbiSauna – Conjugate Finnish verbs</title>
+<meta name="theme-color" content="#f1e4c3">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f1e4c3;--card:#f8eed6;--fg:#2b1d14;--mut:#7a5f45;--acc:#2a6f6b;--ok:#2f7d4f;--bad:#b5381f;--bd:#cdb98f;--hot:#d9622b;--on:#f8eed6;--onhot:#fff8e6;--sun:#e5a823;--ln:#2b1d14;--sh:#2b1d14}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1511;--card:#2a1f17;--fg:#f3e6c8;--mut:#b59d7c;--acc:#6fc0b8;--ok:#8fcf9b;--bad:#ff9072;--bd:#43352a;--hot:#f08a45;--on:#1c1511;--onhot:#1c1511;--sun:#d9a032;--ln:#8a6f50;--sh:#0c0805}}
+:root[data-theme="dark"]{--bg:#1c1511;--card:#2a1f17;--fg:#f3e6c8;--mut:#b59d7c;--acc:#6fc0b8;--ok:#8fcf9b;--bad:#ff9072;--bd:#43352a;--hot:#f08a45;--on:#1c1511;--onhot:#1c1511;--sun:#d9a032;--ln:#8a6f50;--sh:#0c0805}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:0 0 4px}
+.sub{color:var(--mut);margin:0 0 16px;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px}
+button.sec{background:transparent;color:var(--acc)}
+button.ok{background:var(--ok);border-color:var(--ok)}
+button.bad{background:var(--bad);border-color:var(--bad)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+input[type=text]{width:100%;box-sizing:border-box;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--fg)}
+.stats{display:flex;justify-content:space-between;font-weight:600;margin-bottom:8px}
+.sauna{height:14px;border-radius:7px;background:var(--bd);overflow:hidden}
+.sauna>div{height:100%;width:0;background:linear-gradient(90deg,#f4b400,var(--hot));transition:width .4s}
+.task{text-align:center}
+.die{font-size:4rem;line-height:1;display:inline-block}
+.rolling{animation:roll .6s}
+@keyframes roll{0%{transform:rotate(0)}100%{transform:rotate(720deg)}}
+.big{font-size:1.5rem;font-weight:700;margin:6px 0}
+.pron{color:var(--acc)}
+.fb{margin-top:12px;padding:10px;border-radius:10px;border:1px solid var(--bd)}
+.fb.good{border-color:var(--ok)}.fb.wrong{border-color:var(--bad)}
+.hide{display:none}
+.mut{color:var(--mut);font-size:.9rem}
+.sol{font-size:1.3rem;font-weight:700}
+.steam{position:relative;height:70px;overflow:hidden;margin:4px 0}
+.steam span{position:absolute;bottom:0;font-size:1.6rem;opacity:0;animation:rise 2.6s infinite}
+.steam span:nth-child(1){left:30%}.steam span:nth-child(2){left:50%;animation-delay:.9s}.steam span:nth-child(3){left:68%;animation-delay:1.7s}
+.steam span.p{animation-iteration-count:1;animation-delay:0s}
+@keyframes rise{0%{transform:translateY(0);opacity:0}30%{opacity:.85}100%{transform:translateY(-62px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.steam span{animation:none;opacity:.6}}
+.bench{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.seat{position:relative;border:2px solid var(--bd);border-radius:12px;padding:6px 2px;background:var(--bg);transition:transform .1s,border-color .1s}
+.seat.on{border-color:var(--hot);transform:scale(1.07);background:var(--card)}
+.seat .em{font-size:1.6rem;line-height:1.3}.seat .pl{font-weight:700;color:var(--acc)}.seat .en{font-size:.75rem}
+.seat.ice::after{content:"🧊";position:absolute;top:-8px;right:-4px;font-size:1.4rem}
+#ladle{font-size:1.1rem;padding:12px 22px}
+#flash,#brrr{position:fixed;pointer-events:none;opacity:0}
+#flash{inset:0;background:rgba(110,200,255,.4)}
+#brrr{top:32%;left:0;right:0;text-align:center;font-size:3.4rem;font-weight:800;color:#4aa8e0;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+#flash.go2{animation:flashf .9s}#brrr.go{animation:pop 1.1s}
+.shake{animation:shake .5s}
+@keyframes flashf{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+@keyframes pop{0%{opacity:0;transform:scale(.6)}20%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}#flash.go2{animation:none}}
+.opt{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;line-height:1.35}.opt input{margin-top:4px}
+/* ===== V2: cozy Nordic sauna ===== */
+body{font-family:"Avenir Next",system-ui,-apple-system,"Segoe UI",sans-serif;background-image:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--hot) 10%,transparent),transparent)}
+h1,.big,.sol{font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+h1{font-size:1.9rem;letter-spacing:.01em;margin:10px 0 2px}
+.sub{font-size:.95rem;margin-bottom:18px}
+.card{border-radius:22px;padding:18px;box-shadow:0 8px 22px rgba(70,45,20,.08)}
+button{border-radius:999px;padding:11px 20px;font-weight:600;color:var(--on);transition:filter .15s,transform .05s}
+button:hover{filter:brightness(1.07)}button:active{transform:translateY(1px)}
+button.sec{color:var(--acc)}
+input[type=text]{border-radius:14px;padding:12px}
+.sauna{height:10px;border-radius:5px}
+.sauna>div{background:linear-gradient(90deg,#e8c48c,var(--hot))}
+.seat{border:1px solid var(--bd);border-radius:16px;padding:8px 2px;background-color:var(--card);background-image:repeating-linear-gradient(0deg,transparent 0 13px,rgba(120,80,40,.07) 13px 14px)}
+.seat.on{border-color:var(--hot);box-shadow:0 0 0 3px color-mix(in srgb,var(--hot) 28%,transparent);transform:scale(1.05)}
+.fb{border-radius:14px;background:color-mix(in srgb,var(--bg) 60%,transparent)}
+#flash{background:rgba(160,205,230,.45)}
+#brrr{color:#6f9fbd}
+select{font:inherit;color:var(--fg);background-color:var(--bg);border:1px solid var(--bd);border-radius:999px;padding:7px 36px 7px 16px;-webkit-appearance:none;appearance:none;cursor:pointer;background-repeat:no-repeat;background-position:right 14px center;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%239a8c7c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+select:focus{outline:2px solid color-mix(in srgb,var(--acc) 45%,transparent);outline-offset:2px}
+select option{background:var(--card);color:var(--fg)}
+input[type=checkbox]{accent-color:var(--acc)}
+/* ===== V4: retro sauna poster ===== */
+body{font-family:"Gill Sans","Trebuchet MS",system-ui,sans-serif;background-color:var(--bg);background-repeat:no-repeat,repeat;background-size:auto,7px 7px;
+ background-image:radial-gradient(circle at 90% 30px,color-mix(in srgb,var(--sun) 55%,transparent) 0 70px,color-mix(in srgb,var(--hot) 45%,transparent) 70px 98px,color-mix(in srgb,var(--sun) 35%,transparent) 98px 106px,transparent 106px),radial-gradient(rgba(90,55,20,.09) 1px,transparent 1.5px)}
+h1{font-family:Impact,"Haettenschweiler","Franklin Gothic Condensed","Arial Narrow",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.07em;font-size:2.2rem;display:inline-block;background:var(--hot);color:var(--onhot);padding:4px 16px;transform:rotate(-1.5deg);box-shadow:4px 4px 0 var(--sh);margin:16px 0 12px}
+.sub{text-transform:uppercase;letter-spacing:.1em;font-size:.72rem}
+.card{background:var(--card);border:2px solid var(--ln);border-radius:6px;box-shadow:inset 0 0 0 4px var(--card),inset 0 0 0 5px var(--ln)}
+button{border:2px solid var(--ln);border-radius:4px;background:var(--acc);color:var(--on);text-transform:uppercase;letter-spacing:.07em;font-weight:700;font-size:.9rem;box-shadow:3px 3px 0 var(--sh)}
+button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+button.sec{background:transparent;color:var(--fg)}
+button.ok{background:var(--ok);color:var(--on)}button.bad{background:var(--bad);color:var(--on)}
+#ladle{background:var(--hot);color:var(--onhot);font-size:1rem}
+.seat{border:2px solid var(--ln);border-radius:6px;background-image:none;background-color:var(--bg)}
+.seat .pl{text-transform:uppercase;letter-spacing:.05em}
+.seat.on{background:var(--sun);border-color:var(--ln);box-shadow:3px 3px 0 var(--sh);transform:translate(-1px,-1px)}
+.seat.on,.seat.on .pl,.seat.on .mut{color:#2b1d14}
+.sauna{height:14px;border:2px solid var(--ln);border-radius:2px;background:var(--bg)}
+.sauna>div{background:repeating-linear-gradient(45deg,var(--hot) 0 8px,var(--sun) 8px 16px)}
+input[type=text],select{border:2px solid var(--ln);border-radius:4px;background-color:var(--bg);color:var(--fg)}
+input[type=checkbox]{accent-color:var(--hot)}
+.fb{border:2px solid var(--ln);border-radius:4px;background:var(--bg)}
+#flash{background:rgba(111,192,184,.4)}
+#brrr{color:var(--acc);font-family:Impact,"Arial Narrow",sans-serif;letter-spacing:.08em}
+.stats{gap:8px;white-space:nowrap;font-size:min(1rem,3.3vw)}
+.stats>span{min-width:0}
+#lvl{overflow:hidden;text-overflow:ellipsis}
+/* compact header while playing + one-row status bar */
+.stats{flex-wrap:nowrap;gap:6px;white-space:nowrap;font-size:clamp(.72rem,3.6vw,.95rem)}
+.stats #lvl{overflow:hidden;text-overflow:ellipsis;min-width:0}
+body.playing .sub{display:none}
+body.playing h1{font-size:1.15rem;margin:6px 0 8px}
+body.playing main{padding-top:10px}
+body.playing h1{padding:2px 10px;margin:10px 0 8px}
+/* ===== compact layout for small screens ===== */
+@media (max-width:480px){
+ html{font-size:14px}
+ body{font-size:14px;line-height:1.4}
+ main{padding:8px}
+ h1{font-size:1.7rem}
+ .sub{margin-bottom:10px}
+ .card{padding:10px;margin-bottom:8px;box-shadow:inset 0 0 0 3px var(--card),inset 0 0 0 4px var(--ln)}
+ .big{font-size:1.2rem;margin:4px 0}
+ .sol{font-size:1.1rem}
+ .die{font-size:3rem}
+ button{padding:8px 12px;font-size:.78rem;letter-spacing:.05em;box-shadow:2px 2px 0 var(--sh)}
+ #ladle{font-size:.88rem;padding:9px 16px}
+ .row{gap:6px}
+ .opt{margin-bottom:8px;gap:8px}
+ input[type=text]{padding:9px}
+ select{padding:5px 30px 5px 12px}
+ .fb{margin-top:8px;padding:8px}
+ .stats{margin-bottom:6px}
+ .steam{height:44px;margin:2px 0}
+ .steam span{font-size:1.2rem}
+ #steamTop{height:30px!important}
+ .bench{gap:5px;margin:6px 0 8px}
+ .seat{padding:4px 1px}
+ .seat .em{font-size:1.2rem;line-height:1.2}
+ .seat .en{font-size:.65rem}
+ .seat.ice::after{font-size:1.1rem;top:-6px}
+ #brrr{font-size:2.4rem}
+}
+</style>
+</head>
+<body>
+<main>
+<h1>VerbiSauna</h1>
+<p class="sub">Conjugate Finnish verbs – throw löyly to pick the person, then build the sentence.</p>
+
+<div id="start" class="card">
+  <p><b>Options</b></p>
+  <label class="opt"><input type="checkbox" id="puhe"><span><b>🧖 Lauteilla</b> – spoken Finnish: mä, sä, se, me, te, ne<br><span class="mut">lauteilla = on the sauna benches</span></span></label>
+  <label class="opt"><input type="checkbox" id="grumpy"><span><b>🧊 Avanto</b> – negative sentences: en, et, ei … and you scream <b>NO!</b><br><span class="mut">avanto = ice hole</span></span></label>
+  <label class="opt" style="align-items:center"><span>Length:</span> <select id="rounds"><option value="10">10 verbs – one pass</option><option value="20">20 verbs – up to 3 tries</option><option value="0">All verbs – until you nail them</option></select></label>
+  <p style="margin-top:16px"><b>How do you want to play?</b></p>
+  <div class="row">
+    <button id="mW">Write it</button>
+    <button id="mS" class="sec">Say it</button>
+  </div>
+  <p class="mut">Write it: type each sentence. Say it: speak out loud, then reveal the answer.</p>
+</div>
+
+<div id="game" class="hide">
+  <div class="card">
+    <div class="stats"><span>⭐ <span id="pts">0</span></span><span>🔥 Streak <span id="streak">0</span></span><span id="lvl">🚪 Pukuhuone</span><span id="rd"></span></div>
+    <div class="mut">Sauna löyly: <span id="temp">40</span> °C</div>
+    <div class="sauna"><div id="bar"></div></div>
+    <div id="sumLine" class="mut hide" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card task" id="taskCard">
+    <div class="steam" id="steamTop" style="height:46px"></div>
+    <div class="bench" id="bench"></div>
+    <div id="ladleBox"><button id="ladle">Heitä löylyä!</button>
+      <p style="margin:8px 0 0">Tap to see who's next<br><span class="mut">heitä löylyä = throw steam</span></p></div>
+    <div id="taskBody" class="hide">
+    <div class="big"><span class="pron" id="pron"></span> + <span id="verb"></span></div>
+    <div class="mut" id="verben"></div>
+    <div id="negBadge" class="hide big" style="color:var(--bad)"></div>
+
+    <div id="writeBox" style="margin-top:12px">
+      <input type="text" id="ans" placeholder="e.g. sinä löydät" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="row" style="margin-top:8px"><button id="check">Check</button></div>
+      <div class="mut" style="margin-top:6px">Special characters:
+        <button class="sec" style="padding:2px 10px" data-ch="ä">ä</button>
+        <button class="sec" style="padding:2px 10px" data-ch="ö">ö</button>
+      </div>
+    </div>
+
+    <div id="speakBox" class="hide" style="margin-top:12px">
+      <button id="reveal">Show solution</button>
+    </div>
+
+    <div id="fb" class="fb hide"></div>
+    <div id="selfRate" class="row hide" style="margin-top:8px">
+      <button class="ok" id="knew">Knew it</button>
+      <button class="bad" id="didnt">Didn't know</button>
+    </div>
+    <div class="row" style="margin-top:12px"><button id="next" class="sec hide">Next round</button></div>
+    </div>
+  </div>
+  <div id="results" class="card hide"></div>
+  <p class="mut"><a href="#" id="back" style="color:var(--acc)">Change mode</a> · <a href="#" id="finish" style="color:var(--acc)">Finish</a> ·
+  <label><input type="checkbox" id="tts"> Read solution aloud (fi-FI)</label></p>
+</div>
+</main>
+
+<div id="flash"></div><div id="brrr">BRRR!</div>
+<script>
+// ===== EXTENDABLE VERB LIST =====
+// New verb: just add an entry.
+// c = colloquial "me" form (passive); f = 6 forms (minä, sinä, hän, me, te, he); en = [base form, 3rd person sg.]; g = consonant gradation
+const VERBS = [
+ {fi:"ampua",c:"ammutaan",en:["shoot","shoots"],g:"p → mm",f:["ammun","ammut","ampuu","ammumme","ammutte","ampuvat"]},
+ {fi:"antaa",c:"annetaan",en:["give","gives"],g:"nt → nn",f:["annan","annat","antaa","annamme","annatte","antavat"]},
+ {fi:"hiihtää",c:"hiihdetään",en:["ski","skis"],g:"ht → hd",f:["hiihdän","hiihdät","hiihtää","hiihdämme","hiihdätte","hiihtävät"]},
+ {fi:"hyppiä",c:"hypitään",en:["jump","jumps"],g:"pp → p",f:["hypin","hypit","hyppii","hypimme","hypitte","hyppivät"]},
+ {fi:"jakaa",c:"jaetaan",en:["share","shares"],g:"k → ∅",f:["jaan","jaat","jakaa","jaamme","jaatte","jakavat"]},
+ {fi:"kertoa",c:"kerrotaan",en:["tell","tells"],g:"rt → rr",f:["kerron","kerrot","kertoo","kerromme","kerrotte","kertovat"]},
+ {fi:"kirjoittaa",c:"kirjoitetaan",en:["write","writes"],g:"tt → t",f:["kirjoitan","kirjoitat","kirjoittaa","kirjoitamme","kirjoitatte","kirjoittavat"]},
+ {fi:"kylpeä",c:"kylvetään",en:["bathe","bathes"],g:"p → v",f:["kylven","kylvet","kylpee","kylvemme","kylvette","kylpevät"]},
+ {fi:"leipoa",c:"leivotaan",en:["bake","bakes"],g:"p → v",f:["leivon","leivot","leipoo","leivomme","leivotte","leipovat"]},
+ {fi:"lentää",c:"lennetään",en:["fly","flies"],g:"nt → nn",f:["lennän","lennät","lentää","lennämme","lennätte","lentävät"]},
+ {fi:"lukea",c:"luetaan",en:["read","reads"],g:"k → ∅",f:["luen","luet","lukee","luemme","luette","lukevat"]},
+ {fi:"lähteä",c:"lähdetään",en:["leave","leaves"],g:"ht → hd",f:["lähden","lähdet","lähtee","lähdemme","lähdette","lähtevät"]},
+ {fi:"löytää",c:"löydetään",en:["find","finds"],g:"t → d",f:["löydän","löydät","löytää","löydämme","löydätte","löytävät"]},
+ {fi:"näyttää",c:"näytetään",en:["show","shows"],g:"tt → t",f:["näytän","näytät","näyttää","näytämme","näytätte","näyttävät"]},
+ {fi:"onkia",c:"ongitaan",en:["fish","fishes"],g:"k → g",f:["ongin","ongit","onkii","ongimme","ongitte","onkivat"]},
+ {fi:"oppia",c:"opitaan",en:["learn","learns"],g:"pp → p",f:["opin","opit","oppii","opimme","opitte","oppivat"]},
+ {fi:"ottaa",c:"otetaan",en:["take","takes"],g:"tt → t",f:["otan","otat","ottaa","otamme","otatte","ottavat"]},
+ {fi:"piirtää",c:"piirretään",en:["draw","draws"],g:"rt → rr",f:["piirrän","piirrät","piirtää","piirrämme","piirrätte","piirtävät"]},
+ {fi:"rakentaa",c:"rakennetaan",en:["build","builds"],g:"nt → nn",f:["rakennan","rakennat","rakentaa","rakennamme","rakennatte","rakentavat"]},
+ {fi:"ymmärtää",c:"ymmärretään",en:["understand","understands"],g:"rt → rr",f:["ymmärrän","ymmärrät","ymmärtää","ymmärrämme","ymmärrätte","ymmärtävät"]},
+ {fi:"nukkua",c:"nukutaan",en:["sleep","sleeps"],g:"kk → k",f:["nukun","nukut","nukkuu","nukumme","nukutte","nukkuvat"]},
+ {fi:"pitää",c:"pidetään",en:["like/hold","likes/holds"],g:"t → d",f:["pidän","pidät","pitää","pidämme","pidätte","pitävät"]},
+ {fi:"yöpyä",c:"yövytään",en:["stay overnight","stays overnight"],g:"p → v",f:["yövyn","yövyt","yöpyy","yövymme","yövytte","yöpyvät"]},
+ {fi:"soittaa",c:"soitetaan",en:["play/call","plays/calls"],g:"tt → t",f:["soitan","soitat","soittaa","soitamme","soitatte","soittavat"]},
+ {fi:"saapua",c:"saavutaan",en:["arrive","arrives"],g:"p → v",f:["saavun","saavut","saapuu","saavumme","saavutte","saapuvat"]}
+];
+const PRON = ["minä","sinä","hän","me","te","he"];
+const PEN = ["I","you","he/she","we","you (pl.)","they"];
+const PRON_C=["mä","sä","se","me","te","ne"];
+const NEG=["en","et","ei","emme","ette","eivät"];
+const EM=["🙋","🫵","🧑","🙋🧑","🫵🫵","🧑🧑"];
+const DICE = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+const LEVELS = [ // [min points, name, meaning]
+ [0,"🚪 Pukuhuone","pukuhuone = changing room"],
+ [50,"🪵 Alalauteet","alalauteet = lower benches"],
+ [150,"🧖 Ylälauteet","ylälauteet = upper benches"],
+ [300,"🌿 Vihta","vihta = birch whisk"],
+ [600,"👑 Löylymestari","löylymestari = steam master"]];
+function level(){let l=LEVELS[0];for(const x of LEVELS)if(pts>=x[0])l=x;return l}
+
+let total=10, played=0, correct=0, best=0, policy="once", queue=[], size=0, done=0, tries={}, missed={}, mastered={}, firstTotal=0, firstOk=0;
+let puhe=false, grumpy=false, mode="write", pts=0, streak=0, temp=40, cur=null, answered=false;
+const $=id=>document.getElementById(id);
+
+function show(id,v){$(id).classList.toggle("hide",!v); if(id==="game")document.body.classList.toggle("playing",v)}
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g," ")}
+function strip(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+
+function renderBench(){
+  $("bench").innerHTML=PRON.map((_,i)=>'<div class="seat"><div class="em">'+EM[i]+'</div><div class="pl">'+(puhe?PRON_C:PRON)[i]+'</div><div class="mut en">'+PEN[i]+'</div></div>').join("");
+}
+function roll(){
+  answered=false; update();
+  $("next").textContent="Next round";
+  show("results",false); show("taskCard",true);
+  const p=Math.floor(Math.random()*6), v=queue.shift();
+  cur={p,v,neg:grumpy&&Math.random()<0.4};
+  document.querySelectorAll(".seat").forEach(x=>x.classList.remove("on","ice"));
+  $("ans").value=""; show("fb",false); show("next",false); show("selfRate",false);
+  show("taskBody",false); show("ladleBox",true); $("ladle").disabled=false;
+}
+function ladle(){
+  $("ladle").disabled=true; puff("steamTop");
+  const seats=document.querySelectorAll(".seat"), N=13+cur.p; let k=0;
+  (function step(){
+    seats.forEach(x=>x.classList.remove("on"));
+    seats[k%6].classList.add("on");
+    if(k===N-1){ setTimeout(reveal,350); return; }
+    k++; setTimeout(step,70+k*9);
+  })();
+}
+function coldShock(){
+  for(const [id,c] of [["flash","go2"],["brrr","go"]]){const e=$(id);e.classList.remove(c);void e.offsetWidth;e.classList.add(c);}
+  const t=$("taskCard");t.classList.remove("shake");void t.offsetWidth;t.classList.add("shake");
+  try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}
+}
+function reveal(){
+  const {p,v}=cur;
+  show("ladleBox",false); show("taskBody",true);
+  $("pron").textContent=(puhe?PRON_C:PRON)[p];
+  $("verb").textContent=v.fi;
+  $("verben").textContent=puhe?"🧖 spoken Finnish (puhekieli)":"";
+  show("negBadge",cur.neg);
+  $("negBadge").textContent="🧊 Avanto (ice hole)! Jump in and scream NO!";
+  if(cur.neg){ temp=Math.max(40,temp-10); update(); coldShock(); }
+  document.querySelectorAll(".seat")[p].classList.toggle("ice",!!cur.neg);
+  show("writeBox",mode==="write"); show("speakBox",mode==="speak");
+  if(mode==="write") $("ans").focus();
+}
+
+function conn(v){return v.f[0].slice(0,-1)} // connegative = 1st sg. minus -n
+function formStd(){return cur.neg ? NEG[cur.p]+" "+conn(cur.v) : cur.v.f[cur.p]}
+function formC(){ // puhekieli: me = passive, ne = 3rd sg.
+  const {p,v,neg}=cur;
+  if(p===3) return neg ? "ei "+v.c.slice(0,-2) : v.c;
+  if(p===5) return neg ? "ei "+conn(v) : v.f[2];
+  return formStd();
+}
+function form(){return puhe ? formC() : formStd()}
+function enText(){
+  const {p,v,neg}=cur;
+  return neg ? PEN[p]+" "+(p===2?"doesn't":"don't")+" "+v.en[0] : PEN[p]+" "+(p===2?v.en[1]:v.en[0]);
+}
+function solution(){return (puhe?PRON_C:PRON)[cur.p]+" "+form()}
+
+function feedback(kind,head){
+  const fb=$("fb"); fb.className="fb "+(kind==="good"?"good":"wrong");
+  const strong=(cur.p===2||cur.p===5);
+  fb.innerHTML=head+'<div class="sol">'+(cur.neg?solution().toUpperCase()+"!":solution())+'</div><div>🇬🇧 '+enText()+'</div>'
+   +'<div class="mut">Gradation: '+cur.v.g+' ('+(cur.neg?"negative: weak-grade stem for every person, even hän/he":strong?"vahva aste – strong grade in 3rd person":"heikko aste – weak grade")+')</div>'+(puhe&&(cur.p===3||cur.p===5)?'<div class="mut">Spoken Finnish (puhekieli): '+(cur.p===3?'me → passive form (-taan/-tään)':'ne → 3rd person singular form')+'</div>':'');
+  show("fb",true);
+  if($("tts").checked && "speechSynthesis" in window){
+    const u=new SpeechSynthesisUtterance(solution()); u.lang="fi-FI"; speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+}
+
+// shuffle bag: verbs are drawn without replacement; a wrong verb goes back a few draws later (not immediately)
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function nextLabel(){$("next").textContent=queue.length?"Next round":"See results"}
+function requeue(v){queue.splice(Math.min(queue.length,2+Math.floor(Math.random()*3)),0,v);nextLabel()}
+function track(ok){
+  const v=cur.v,k=v.fi; tries[k]=(tries[k]||0)+1;
+  if(tries[k]===1){firstTotal++; if(ok)firstOk++;}
+  if(ok){ mastered[k]=1; done++; }
+  else{
+    missed[k]=missed[k]||{v,forms:[]}; const s=solution();
+    if(!missed[k].forms.some(f=>f.sol===s))missed[k].forms.push({sol:s,en:enText()});
+    if(policy==="once"||(policy==="three"&&tries[k]>=3)) done++; else requeue(v);
+  }
+  nextLabel();
+}
+function award(ok){
+  track(ok);
+  played++;
+  if(ok){
+    streak++; correct++; best=Math.max(best,streak); const gain=10+Math.min(streak-1,5)*2+(cur.neg?5:0); pts+=gain;
+    temp+=12+(cur.neg?10:0);
+  }else{ streak=0; temp=Math.max(40,temp-15); }
+  let msg="";
+  if(temp>=100){ pts+=25; temp=40; msg="🧖 Sauna is hot! Löyly bonus +25 ⭐"; }
+  update();
+  return msg;
+}
+
+function update(){
+  $("pts").textContent=pts; $("streak").textContent=streak; $("temp").textContent=temp;
+  $("bar").style.width=Math.min(100,(temp-40)/60*100)+"%";
+  $("lvl").textContent=level()[1]; $("rd").textContent=done+"/"+size;
+}
+
+function check(){
+  if(answered) return;
+  const given=norm($("ans").value).replace(/^mie\b/,"mä").replace(/^sie\b/,"sä"); if(!given) return;
+  answered=true;
+  const right=norm(form()), full=norm(solution());
+  const stdForm=norm(formStd()), stdFull=norm(PRON[cur.p]+" "+formStd());
+  const ok = given===full || given===right;
+  if(ok){ const m=award(true); feedback("good","Oikein! "+(cur.neg?"Back in the sauna! ":"")+(streak>1?"🔥 "+streak+" in a row! ":"")+m); }
+  else if(puhe&&stdForm!==right&&(given===stdFull||given===stdForm)){ requeue(cur.v); feedback("bad","Correct standard Finnish – but you're in spoken Finnish (puhekieli) mode. "); }
+  else if(strip(given)===strip(full)||strip(given)===strip(right)){ award(false); feedback("bad","Almost – watch the ä/ö. "); }
+  else { award(false); feedback("bad","Not quite. "); }
+  show("next",true);
+  $("ans").blur();
+  $("fb").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+$("mW").onclick=()=>{mode="write";start()};
+$("mS").onclick=()=>{mode="speak";start()};
+function start(){puhe=$("puhe").checked;grumpy=$("grumpy").checked;total=+$("rounds").value;policy=total===10?"once":total===20?"three":"mastery";queue=shuffle(VERBS.slice());if(total>0)queue=queue.slice(0,total);size=queue.length;done=0;tries={};missed={};mastered={};firstTotal=0;firstOk=0;played=0;correct=0;best=0;pts=0;streak=0;temp=40;show("results",false);show("sumLine",false);show("start",false);show("game",true);update();renderBench();roll()}
+$("back").onclick=e=>{e.preventDefault();show("game",false);show("start",true)};
+$("check").onclick=check;
+$("ans").addEventListener("keydown",e=>{if(e.key==="Enter"){answered?next():check()}});
+document.querySelectorAll("[data-ch]").forEach(b=>b.onclick=()=>{const i=$("ans");i.value+=b.dataset.ch;i.focus()});
+$("reveal").onclick=()=>{show("speakBox",false);feedback("good","");$("fb").className="fb";show("selfRate",true);$("fb").scrollIntoView({behavior:"smooth",block:"center"})};
+$("knew").onclick=()=>{const m=award(true);show("selfRate",false);if(m)$("fb").insertAdjacentHTML("afterbegin",m);show("next",true)};
+$("didnt").onclick=()=>{award(false);show("selfRate",false);show("next",true)};
+function next(){ if(queue.length) roll(); else finish(); }
+function puff(id){
+  const box=$(id||"steam");
+  for(let i=0;i<7;i++){const e=document.createElement("span");e.textContent=i%2?"💨":"☁️";e.className="p";
+    e.style.left=(8+Math.random()*80)+"%";e.style.animationDuration=(1+Math.random()*1.2)+"s";
+    box.appendChild(e);setTimeout(()=>e.remove(),2400);}
+}
+function finish(){
+  show("taskCard",false);
+  const acc=firstTotal?Math.round(firstOk/firstTotal*100):0;
+  const rev=Object.keys(missed).filter(k=>policy!=="three"||!mastered[k]).map(k=>missed[k]);
+  const head=policy==="mastery"?"Tricky ones – wrong at least once:":policy==="three"?"Still cold after 3 tries:":"Review these:";
+  const rank=acc>=90?["🔥","Täydet löylyt","täydet löylyt = perfect steam"]
+    :acc>=70?["♨️","Kuuma löyly","kuuma löyly = hot steam"]
+    :acc>=40?["🪵","Lämpiää","lämpiää = warming up"]
+    :["🥶","Kylmä sauna","kylmä sauna = cold sauna"];
+  $("results").innerHTML='<div class="big" style="text-align:center">'+rank[0]+' '+rank[1]+'</div>'
+   +'<p class="mut" style="text-align:center;margin-top:0">'+rank[2]+'</p>'
+   +'<div class="steam" id="steam"><span>☁️</span><span>☁️</span><span>☁️</span></div>'
+   +(rev.length?'<p><b>'+head+'</b></p><ul>'+rev.map(m=>'<li><b>'+m.v.fi+'</b> <span class="mut">('+m.v.en[0]+')</span><br>'+m.forms.map(f=>f.sol+' – <span class="mut">'+f.en+'</span>').join('<br>')+'</li>').join('')+'</ul>':'')
+   +'<div class="row" style="margin:12px 0 4px"><button id="loyly" class="sec">Heitä löylyä!</button></div>'
+   +'<p style="text-align:center"><b>Kiitos löylystä!</b><br><span class="mut">Thanks for the steam – the traditional thank-you when leaving the sauna.</span></p>'
+   +'<div class="row"><button id="again">Play again</button><button id="menu" class="sec">Change mode</button></div>';
+  $("sumLine").innerHTML='<span style="white-space:nowrap;font-size:clamp(.66rem,3.4vw,.9rem)">✅ '+firstOk+' / '+firstTotal+' first try · '+acc+' % · 🔥 best streak '+best+'</span><br>'+level()[2];
+  show("sumLine",true);
+  show("results",true);
+  $("loyly").onclick=()=>puff("steam");
+  $("again").onclick=start;
+  $("menu").onclick=()=>{show("game",false);show("start",true)};
+}
+$("next").onclick=next;
+$("ladle").onclick=ladle;
+$("finish").onclick=e=>{e.preventDefault();finish()};
+</script>
+</body>
+</html>
