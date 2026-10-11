@@ -1,6 +1,6 @@
 # VerbiSauna 🧖
 
-A sauna-themed browser game for practising Finnish verb conjugation and consonant gradation (*astevaihtelu*). Throw löyly to pick the person, then build the sentence.
+A sauna-themed browser game for practising Finnish verb conjugation and verbtype 1 consonant gradation (*astevaihtelu*). Throw löyly to pick the person, then build the sentence.
 
 Single HTML file, no dependencies, no build step.
 
@@ -36,4 +36,4 @@ Add an entry to the `VERBS` array in `index.html`:
 - `c` – colloquial *me* form (passive)
 - `f` – six forms: minä, sinä, hän, me, te, he
 - `en` – English base form and 3rd person singular
-- `g` – the consonant gradation
+- `g` – the verbtype 1 consonant gradation
