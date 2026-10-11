@@ -37,3 +37,9 @@ Add an entry to the `VERBS` array in `index.html`:
 - `f` – six forms: minä, sinä, hän, me, te, he
 - `en` – English base form and 3rd person singular
 - `g` – the verbtype 1 consonant gradation
+
+## Sources
+
+- https://uusikielemme.fi/finnish-grammar/consonant-gradation/verbtype-1-consonant-gradation
+- https://fi.wiktionary.org/wiki/Wikisanakirja:Etusivu
+- https://glosbe.com/
