@@ -174,10 +174,10 @@ export function createGame() {
     const standard = normalize(standardForm());
     const standardFull = normalize(`${PRON[state.cur.p]} ${standardForm()}`);
     const spokenFull = normalize(`${PRON_C[state.cur.p]} ${spokenForm()}`);
-    const pronounRequired = !state.puheMode && (state.cur.p === 2 || state.cur.p === 5);
-    const acceptsPronounless = state.puheMode || !pronounRequired;
+    const pronounRequired = state.cur.p === 2 || state.cur.p === 5;
+    const acceptsPronounless = !pronounRequired;
 
-    if (given === full || given === spokenFull || (acceptsPronounless && (given === right || given === standard))) {
+    if (given === full || (acceptsPronounless && given === right)) {
       const bonus = award(true);
       const praise = state.streak > 1 ? `🔥 ${state.streak} in a row! ` : "";
       return {
@@ -186,17 +186,28 @@ export function createGame() {
       };
     }
 
-    if (state.puheMode && standard !== right && (given === standardFull || given === standard)) {
+    const pronounlessSpoken = normalize(spokenForm());
+    if (!state.puheMode && (
+      (spokenFull !== full && given === spokenFull)
+      || (acceptsPronounless && pronounlessSpoken !== right && given === pronounlessSpoken)
+    )) {
+      award(false);
+      return {
+        kind: "bad",
+        head: "Correct spoken Finnish (puhekieli) – but you're in standard Finnish mode. ",
+      };
+    }
+
+    if (state.puheMode && ((given === standardFull && standardFull !== full)
+      || (standard !== right && acceptsPronounless && given === standard))) {
       requeue(state.cur.v);
       return {
         kind: "bad",
         head: "Correct standard Finnish – but you're in spoken Finnish (puhekieli) mode. ",
       };
     }
-
     if (stripDiacritics(given) === stripDiacritics(full)
-      || stripDiacritics(given) === stripDiacritics(spokenFull)
-      || (acceptsPronounless && (stripDiacritics(given) === stripDiacritics(right) || stripDiacritics(given) === stripDiacritics(standard)))) {
+      || (acceptsPronounless && stripDiacritics(given) === stripDiacritics(right))) {
       award(false);
       return { kind: "bad", head: "Almost – watch the ä/ö. " };
     }
