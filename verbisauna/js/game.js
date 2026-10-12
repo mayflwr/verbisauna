@@ -1,4 +1,4 @@
-import { NEG, PEN, PRON, PRON_C, VERBS, level } from "./verbs.js";
+import { NEGATIONS, EN_PRONOUNS, STANDARD_PRONOUNS, COLLOQUIAL_PRONOUNS, VERBS, level } from "./verbs.js";
 
 function shuffle(items) {
   for (let i = items.length - 1; i > 0; i -= 1) {
@@ -93,15 +93,15 @@ export function createGame() {
   }
 
   function solution() {
-    const pronouns = state.puheMode ? PRON_C : PRON;
-    return `${pronouns[state.cur.p]} ${form()}`;
+    const pronounSet = state.puheMode ? COLLOQUIAL_PRONOUNS : STANDARD_PRONOUNS;
+    return `${pronounSet[state.cur.p]} ${form()}`;
   }
 
   function englishText() {
     const { p, v, neg } = state.cur;
     return neg
-      ? `${PEN[p]} ${p === 2 ? "doesn't" : "don't"} ${v.en[0]}`
-      : `${PEN[p]} ${p === 2 ? v.en[1] : v.en[0]}`;
+      ? `${EN_PRONOUNS[p]} ${p === 2 ? "doesn't" : "don't"} ${v.en[0]}`
+      : `${EN_PRONOUNS[p]} ${p === 2 ? v.en[1] : v.en[0]}`;
   }
 
   function requeue(verb) {
@@ -173,7 +173,7 @@ export function createGame() {
     const full = normalize(solution());
     const standard = normalize(standardForm());
     const standardFull = normalize(`${PRON[state.cur.p]} ${standardForm()}`);
-    const spokenFull = normalize(`${PRON_C[state.cur.p]} ${spokenForm()}`);
+    const spokenFull = normalize(`${PRON_COLLOQUIAL[state.cur.p]} ${spokenForm()}`);
     const pronounRequired = state.cur.p === 2 || state.cur.p === 5;
     const acceptsPronounless = !pronounRequired;
 

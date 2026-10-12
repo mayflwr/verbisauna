@@ -1,4 +1,4 @@
-import { EM, PRON, PRON_C, PEN, level } from "./verbs.js";
+import { PERSON_EMOJIS, STANDARD_PRONOUNS, COLLOQUIAL_PRONOUNS, EN_PRONOUNS, level } from "./verbs.js";
 import { createGame } from "./game.js";
 
 const game = createGame();
@@ -11,10 +11,10 @@ function show(id, visible) {
 }
 
 function renderBench() {
-  $("bench").innerHTML = PRON.map((_, index) => (
-    `<div class="seat"><div class="em">${EM[index]}</div>`
-    + `<div class="pl">${(state.puheMode ? PRON_C : PRON)[index]}</div>`
-    + `<div class="mut en">${PEN[index]}</div></div>`
+  $("bench").innerHTML = STANDARD_PRONOUNS.map((_, index) => (
+    `<div class="seat"><div class="emoji">${PERSON_EMOJIS[index]}</div>`
+    + `<div class="pl">${(state.puheMode ? COLLOQUIAL_PRONOUNS : STANDARD_PRONOUNS)[index]}</div>`
+    + `<div class="mut en">${EN_PRONOUNS[index]}</div></div>`
   )).join("");
 }
 
@@ -79,7 +79,7 @@ function reveal() {
   game.reveal();
   show("ladleBox", false);
   show("taskBody", true);
-  $("pron").textContent = (state.puheMode ? PRON_C : PRON)[p];
+  $("currentPronoun").textContent = (state.puheMode ? COLLOQUIAL_PRONOUNS : STANDARD_PRONOUNS)[p];
   $("verb").textContent = v.fi;
   $("verben").textContent = state.puheMode ? "🧖 spoken Finnish (puhekieli)" : "";
   show("negBadge", neg);

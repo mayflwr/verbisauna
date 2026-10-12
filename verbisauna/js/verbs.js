@@ -94,15 +94,15 @@ export const VERBS = RAW.map(v=>Object.assign({},v,build(v)));
   }
   if(!bad) console.log("VerbiSauna self-test OK: "+VERBS.length+" verbs match the hand-typed originals");
 })();
-export const PRON = ["minä","sinä","hän","me","te","he"];
-export const PEN = ["I","you","he/she","we","you (pl.)","they"];
-export const PRON_C=["mä","sä","se","me","te","ne"];
-export const NEG=["en","et","ei","emme","ette","eivät"];
-export const EM=["🙋","🫵","🧑","🙋🧑","🫵🫵","🧑🧑"];
-export const LEVELS = [ // [min points, name, meaning]
+export const STANDARD_PRONOUNS=["minä","sinä","hän","me","te","he"];
+export const EN_PRONOUNS=["I","you","he/she","we","you (pl.)","they"];
+export const COLLOQUIAL_PRONOUNS=["mä","sä","se","me","te","ne"];
+export const NEGATIONS=["en","et","ei","emme","ette","eivät"];
+export const PERSON_EMOJIS=["🙋","🫵","🧑","🙋🧑","🫵🫵","🧑🧑"];
+export const LEVELS=[ // [min points, name, meaning]
  [0,"🚪 Pukuhuone","pukuhuone = changing room"],
  [50,"🪵 Alalauteet","alalauteet = lower benches"],
  [150,"🧖 Ylälauteet","ylälauteet = upper benches"],
  [300,"🌿 Vihta","vihta = birch whisk"],
  [600,"👑 Löylymestari","löylymestari = steam master"]];
-export function level(points){let l=LEVELS[0];for(const x of LEVELS)if(points>=x[0])l=x;return l}
+export function level(points){let l=LEVELS[0];for(const x of LEVELS)if(points>=x[0])l=x;return l}_
