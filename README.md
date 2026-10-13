@@ -33,6 +33,7 @@ Verbs are drawn from a shuffle bag, so none repeat until the bag is empty.
 ## Project structure
 
 - `index.html` contains the page markup.
+- `favicon.svg` contains the sauna-themed browser tab icon.
 - `verbisauna/styles.css` contains the styling.
 - `verbisauna/js/verbs.js` contains verb data, conjugation rules, and the reference-form self-test.
 - `verbisauna/js/game.js` contains game state and rules.
