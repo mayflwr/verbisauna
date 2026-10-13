@@ -1,4 +1,4 @@
-# VerbiSauna 🧖
+<h1><img src="./verbisauna-title.svg" alt="VerbiSauna" height="42"></h1>
 
 A sauna-themed browser game for practising Finnish verb conjugation and type 1 consonant gradation (*astevaihtelu*). Throw löyly to pick the person, then build the sentence.
 
@@ -33,7 +33,7 @@ Verbs are drawn from a shuffle bag, so none repeat until the bag is empty.
 ## Project structure
 
 - `index.html` contains the page markup.
-- `favicon.svg` contains the sauna-themed browser tab icon.
+- `favicon.svg` contains the browser tab icon.
 - `verbisauna/styles.css` contains the styling.
 - `verbisauna/js/verbs.js` contains verb data, conjugation rules, and the reference-form self-test.
 - `verbisauna/js/game.js` contains game state and rules.
@@ -66,7 +66,7 @@ The generated forms are checked against the hand-written `LEGACY` reference fixt
 - `g` – the verb type 1 consonant gradation
 
 
-## Sources ❤️
+## Sources 🧡
 
 VerbiSauna stands on the shoulders of people who share what they know:
 
